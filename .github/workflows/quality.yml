@@ -11,7 +11,9 @@ concurrency:
   cancel-in-progress: true
 jobs:
   inventory:
-    runs-on: ubuntu-latest
+    runs-on: macos-26
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
     outputs:
       matrix: ${{ steps.targets.outputs.matrix }}
     steps:
@@ -19,7 +21,9 @@ jobs:
         with:
           persist-credentials: false
       - id: targets
-        run: echo "matrix=$(python3 Scripts/verify.py --list)" >> "$GITHUB_OUTPUT"
+        run: |
+          matrix=$(swift Scripts/verify.swift --list)
+          printf 'matrix=%s\n' "$matrix" >> "$GITHUB_OUTPUT"
   verify:
     needs: inventory
     name: Verify / ${{ matrix.name }}
@@ -40,4 +44,4 @@ jobs:
       - name: Build or test
         env:
           TARGET_INDEX: ${{ matrix.index }}
-        run: python3 Scripts/verify.py --index "$TARGET_INDEX"
+        run: swift Scripts/verify.swift --index "$TARGET_INDEX"

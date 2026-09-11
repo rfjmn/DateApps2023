@@ -10,13 +10,13 @@ DateApps2023のiOSアプリのソースコードです。
 
 ```sh
 # 検証対象と番号の一覧
-python3 Scripts/verify.py --list
+swift Scripts/verify.swift --list
 
 # 全対象を順番に検証
-python3 Scripts/verify.py
+swift Scripts/verify.swift
 
 # 1件だけ検証（0始まり）
-python3 Scripts/verify.py --index 0
+swift Scripts/verify.swift --index 0
 ```
 
 アプリは署名不要のSimulator向けにビルドし、Swiftパッケージは `swift test` で検証します。作業用ディレクトリは実行ごとに作成・削除するため、初回と同様に時間がかかります。依存パッケージの取得にはネットワーク接続が必要です。
