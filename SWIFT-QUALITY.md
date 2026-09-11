@@ -4,6 +4,10 @@
 
 ログイン・登録の入力検証をAuthenticateAccountUseCase、画面状態をAuthenticationViewModel、Firebaseとの接続をFirebaseAccountRepositoryへ分離しています。状態通知はMainActor上で行い、Viewと通信完了クロージャはViewModelを弱参照します。AccountCoreで検証・二重送信・再試行・解放をテストします。
 
+認証アカウント作成とプロフィール保存を分離し、保存だけが失敗した場合は作成済みIDを使って再試行します。登録フォームに専用の状態とボタンを表示し、処理中の重複操作を防ぎます。Firestoreのトランザクションでは既存の作成日時を維持します。
+
+入力検証、作成失敗、プロフィール保存の部分成功・再試行、連打防止、ViewModelの解放をスタブで検証します。
+
 ## 共通の設計基準
 
 - 型・メンバーは必要な範囲だけに公開します。内部状態は`private`、外部から読む状態は必要に応じて`private(set)`にします。プロトコルの要件、Storyboardの接続、サブクラスからの利用を確認して変更します。

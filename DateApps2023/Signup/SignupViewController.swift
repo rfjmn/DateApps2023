@@ -21,15 +21,25 @@ final class SignupViewController: UIViewController {
     }
 
     @IBAction private func signUpButtonTapped(_: UIButton) {
+        if case .profilePending = viewModel.state {
+            viewModel.retryProfile()
+            return
+        }
         viewModel.signUp(name: usernameTextField.text ?? "", email: emailTextField.text ?? "", password: passwordTextField.text ?? "", confirmation: confirmPasswordTextField.text ?? "")
     }
 
     private func render(_ state: AuthenticationViewModel.State) {
+        let isProfilePending: Bool
+        if case .profilePending = state { isProfilePending = true } else { isProfilePending = false }
         signupButton.isEnabled = state != .submitting
+        signupButton.setTitle(isProfilePending ? "登録を完了する" : "登録", for: .normal)
+        [usernameTextField, emailTextField, passwordTextField, confirmPasswordTextField].forEach {
+            $0?.isEnabled = state != .submitting && !isProfilePending
+        }
         switch state {
         case .idle, .submitting: break
         case .authenticated: AuthenticationModule.showHome(from: self)
-        case let .failed(message): AuthenticationModule.showError(message, from: self)
+        case let .failed(message), let .profilePending(message): AuthenticationModule.showError(message, from: self)
         }
     }
 }

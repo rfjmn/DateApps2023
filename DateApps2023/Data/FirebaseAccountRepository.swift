@@ -2,61 +2,68 @@ import FirebaseAuth
 import FirebaseFirestore
 import Foundation
 
-/// Firebase AuthenticationとFirestoreへ接続するRepository。
-///
-/// 登録は認証アカウントの作成、プロフィールの保存の順に行います。
-/// プロフィール保存に失敗しても、作成済みの認証アカウントは削除しません。
+/// Firebase AuthenticationとFirestoreの境界。認証アカウント作成とプロフィール保存を独立して再利用できます。
 @MainActor
 final class FirebaseAccountRepository: AccountRepository {
+    private let auth: Auth
+    private let database: Firestore
+
+    init(auth: Auth = .auth(), database: Firestore = .firestore()) {
+        self.auth = auth
+        self.database = database
+    }
+
     func signIn(email: String, password: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        Auth.auth().signIn(withEmail: email, password: password) { result, error in
-            let outcome: Result<Void, Error>
-            if let error = error {
-                outcome = .failure(error)
-            } else if result != nil {
-                outcome = .success(())
-            } else {
-                outcome = .failure(RepositoryError.missingAccount)
+        auth.signIn(withEmail: email, password: password) { result, error in
+            Task { @MainActor in
+                if let error = error { completion(.failure(error)) }
+                else if result != nil { completion(.success(())) }
+                else { completion(.failure(RepositoryError.missingAccount)) }
             }
-            Task { @MainActor in completion(outcome) }
         }
     }
 
-    func signUp(name: String, email: String, password: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        Auth.auth().createUser(withEmail: email, password: password) { result, error in
-            if let error = error {
-                Task { @MainActor in completion(.failure(error)) }
-                return
+    func createAccount(name: String, email: String, password: String, completion: @escaping (Result<Account, Error>) -> Void) {
+        auth.createUser(withEmail: email, password: password) { result, error in
+            Task { @MainActor in
+                if let error = error { completion(.failure(error)) }
+                else if let result = result { completion(.success(Account(id: result.user.uid, name: name))) }
+                else { completion(.failure(RepositoryError.missingAccount)) }
             }
-            guard let result = result else {
-                Task { @MainActor in completion(.failure(RepositoryError.missingAccount)) }
-                return
+        }
+    }
+
+    /// ログイン中の本人のドキュメントだけを保存します。同じIDへの再試行では文書を増やしません。
+    func saveProfile(for account: Account, completion: @escaping (Result<Void, Error>) -> Void) {
+        guard auth.currentUser?.uid == account.id else {
+            completion(.failure(RepositoryError.accountChanged))
+            return
+        }
+        let document = database.collection("users").document(account.id)
+        database.runTransaction({ transaction, errorPointer in
+            do {
+                let existing = try transaction.getDocument(document)
+                var fields: [String: Any] = ["name": account.name, "updated_at": FieldValue.serverTimestamp()]
+                if !existing.exists { fields["created_at"] = FieldValue.serverTimestamp() }
+                transaction.setData(fields, forDocument: document, merge: true)
+            } catch {
+                errorPointer?.pointee = error as NSError
             }
-            let account = Account(id: result.user.uid, name: name)
-            let timestamp = Timestamp(date: Date())
-            Firestore.firestore().collection("users").document(account.id).setData([
-                "name": account.name, "created_at": timestamp, "updated_at": timestamp,
-            ]) { error in
-                Task { @MainActor in
-                    if let error = error {
-                        completion(.failure(RepositoryError.profileCreationFailed(error)))
-                    } else {
-                        completion(.success(()))
-                    }
-                }
+            return nil
+        }) { _, error in
+            Task { @MainActor in
+                if let error = error { completion(.failure(error)) }
+                else { completion(.success(())) }
             }
         }
     }
 
     private enum RepositoryError: LocalizedError {
-        case missingAccount
-        case profileCreationFailed(Error)
-
+        case missingAccount, accountChanged
         var errorDescription: String? {
             switch self {
             case .missingAccount: return "アカウント情報を取得できませんでした。"
-            case .profileCreationFailed:
-                return "アカウントは作成されましたが、プロフィールの保存に失敗しました。管理者にお問い合わせください。"
+            case .accountChanged: return "ログイン状態が変わりました。ログインし直してください。"
             }
         }
     }

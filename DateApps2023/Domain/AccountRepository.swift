@@ -8,9 +8,19 @@ struct Account: Equatable {
 
 /// 認証とプロフィール作成をデータ層へ委譲する境界。呼び出しと結果通知はMainActor上で行います。
 @MainActor
-protocol AccountRepository {
+protocol AccountRepository: AnyObject {
     func signIn(email: String, password: String, completion: @escaping (Result<Void, Error>) -> Void)
-    func signUp(name: String, email: String, password: String, completion: @escaping (Result<Void, Error>) -> Void)
+    func createAccount(name: String, email: String, password: String, completion: @escaping (Result<Account, Error>) -> Void)
+    func saveProfile(for account: Account, completion: @escaping (Result<Void, Error>) -> Void)
+}
+
+/// 認証アカウントは作成済みで、プロフィールの保存だけを再試行できる失敗。
+enum AccountRegistrationError: LocalizedError {
+    case profilePending(Account, Error)
+
+    var errorDescription: String? {
+        "アカウントは作成済みです。通信状態を確認し、登録を完了してください。"
+    }
 }
 
 enum AccountValidationError: LocalizedError, Equatable {
@@ -58,9 +68,22 @@ final class AuthenticateAccountUseCase {
             guard !name.isEmpty else { throw AccountValidationError.missingName }
             try validate(email: email, password: password)
             guard password == confirmation else { throw AccountValidationError.passwordsDoNotMatch }
-            repository.signUp(name: name, email: email, password: password, completion: completion)
+            repository.createAccount(name: name, email: email, password: password) { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case let .success(account): self.saveProfile(for: account, completion: completion)
+                case let .failure(error): completion(.failure(error))
+                }
+            }
         } catch {
             completion(.failure(error))
+        }
+    }
+
+    /// 作成済みアカウントのプロフィールだけを保存します。認証アカウントは再作成しません。
+    func saveProfile(for account: Account, completion: @escaping (Result<Void, Error>) -> Void) {
+        repository.saveProfile(for: account) { result in
+            completion(result.mapError { AccountRegistrationError.profilePending(account, $0) })
         }
     }
 

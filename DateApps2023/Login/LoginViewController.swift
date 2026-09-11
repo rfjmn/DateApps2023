@@ -25,7 +25,7 @@ final class LoginViewController: UIViewController {
         switch state {
         case .idle, .submitting: break
         case .authenticated: AuthenticationModule.showHome(from: self)
-        case let .failed(message): AuthenticationModule.showError(message, from: self)
+        case let .failed(message), let .profilePending(message): AuthenticationModule.showError(message, from: self)
         }
     }
 }

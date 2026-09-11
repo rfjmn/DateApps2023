@@ -2,6 +2,39 @@
 import XCTest
 
 final class AuthenticationTests: XCTestCase {
+@MainActor func testProfileFailureRetriesOnlyPersistenceAndBlocksDuplicateRegistration() {
+    let repository = RepositorySpy()
+    let viewModel = AuthenticationViewModel(useCase: AuthenticateAccountUseCase(repository: repository))
+    let account = Account(id: "created-id", name: "Rio")
+    viewModel.signUp(name: "Rio", email: "a@example.com", password: "secret", confirmation: "secret")
+    repository.accountCompletion?(.success(account))
+    XCTAssertEqual(repository.saveCount, 1)
+    repository.completion?(.failure(URLError(.notConnectedToInternet)))
+    guard case .profilePending = viewModel.state else { return XCTFail("Expected recoverable partial registration") }
+    viewModel.signUp(name: "Other", email: "other@example.com", password: "secret", confirmation: "secret")
+    viewModel.retryProfile()
+    viewModel.retryProfile()
+    XCTAssertEqual(repository.signUpCount, 1)
+    XCTAssertEqual(repository.saveCount, 2)
+    XCTAssertEqual(repository.savedAccount, account)
+    repository.completion?(.failure(URLError(.timedOut)))
+    viewModel.retryProfile()
+    XCTAssertEqual(repository.saveCount, 3)
+    repository.completion?(.success(()))
+    XCTAssertEqual(viewModel.state, .authenticated)
+    viewModel.retryProfile()
+    XCTAssertEqual(repository.saveCount, 3)
+}
+
+@MainActor func testAccountCreationFailureDoesNotSaveProfile() {
+    let repository = RepositorySpy()
+    let viewModel = AuthenticationViewModel(useCase: AuthenticateAccountUseCase(repository: repository))
+    viewModel.signUp(name: "Rio", email: "a@example.com", password: "secret", confirmation: "secret")
+    repository.accountCompletion?(.failure(URLError(.notConnectedToInternet)))
+    XCTAssertEqual(repository.saveCount, 0)
+    guard case .failed = viewModel.state else { return XCTFail("Expected creation failure") }
+}
+
     @MainActor func testSignInNormalizesEmailWithoutChangingPassword() {
         let repository = RepositorySpy()
         let useCase = AuthenticateAccountUseCase(repository: repository)
@@ -86,6 +119,9 @@ private final class RepositorySpy: AccountRepository {
     private(set) var password: String?
     private(set) var name: String?
     var completion: ((Result<Void, Error>) -> Void)?
+    var accountCompletion: ((Result<Account, Error>) -> Void)?
+    private(set) var saveCount = 0
+    private(set) var savedAccount: Account?
 
     func signIn(email: String, password: String, completion: @escaping (Result<Void, Error>) -> Void) {
         signInCount += 1
@@ -94,11 +130,16 @@ private final class RepositorySpy: AccountRepository {
         self.completion = completion
     }
 
-    func signUp(name: String, email: String, password: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    func createAccount(name: String, email: String, password: String, completion: @escaping (Result<Account, Error>) -> Void) {
         signUpCount += 1
         self.name = name
         self.email = email
         self.password = password
+        self.accountCompletion = completion
+    }
+    func saveProfile(for account: Account, completion: @escaping (Result<Void, Error>) -> Void) {
+        saveCount += 1
+        savedAccount = account
         self.completion = completion
     }
 }
