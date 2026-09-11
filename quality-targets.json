@@ -5,5 +5,10 @@
     "scheme": "DateApps2023",
     "project": "DateApps2023.xcodeproj",
     "workspace": null
+  },
+  {
+    "kind": "package",
+    "name": "AccountCore",
+    "path": "."
   }
 ]

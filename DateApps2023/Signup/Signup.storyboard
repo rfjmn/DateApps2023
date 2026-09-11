@@ -83,7 +83,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Signup"/>
                                 <connections>
-                                    <action selector="tapSignupButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="BHB-SX-ADh"/>
+                                    <action selector="signUpButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="BHB-SX-ADh"/>
                                 </connections>
                             </button>
                         </subviews>

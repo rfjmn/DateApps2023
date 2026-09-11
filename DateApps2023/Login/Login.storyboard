@@ -57,7 +57,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Login"/>
                                 <connections>
-                                    <action selector="tapLoginButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="QzE-wu-wva"/>
+                                    <action selector="signInButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="QzE-wu-wva"/>
                                 </connections>
                             </button>
                         </subviews>

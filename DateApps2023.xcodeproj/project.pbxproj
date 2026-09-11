@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1DDA49AB7D786FD59690A1C8 /* AuthenticationModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F97EDC91B465924DE62BA0 /* AuthenticationModule.swift */; };
 		3411C1D5299C874600C7F270 /* Signup.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3411C1D4299C874600C7F270 /* Signup.storyboard */; };
 		3411C1D7299C876300C7F270 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3411C1D6299C876300C7F270 /* SignupViewController.swift */; };
 		3417A6DF299A88F60051391F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3417A6DE299A88F60051391F /* AppDelegate.swift */; };
@@ -32,7 +33,10 @@
 		3443DFB8299CB0B0006EACB0 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3443DFB7299CB0B0006EACB0 /* Home.storyboard */; };
 		3443DFBB299CBA8D006EACB0 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3443DFBA299CBA8D006EACB0 /* LoginViewController.swift */; };
 		3443DFBD299CBA9E006EACB0 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3443DFBC299CBA9E006EACB0 /* Login.storyboard */; };
+		A3CBF74F751ED6931D310C27 /* AccountRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6649E7619C59554DB4BF26 /* AccountRepository.swift */; };
+		DB8CE339851291659D73BA1B /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382C5838719643FE71A12F0 /* AuthenticationViewModel.swift */; };
 		FACE5695E0D32F765C6D3BC8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C732A00BABD6CEE00C75B7BB /* User.swift */; };
+		FBB491DBCA9BB0494FC741C0 /* FirebaseAccountRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC06F7876B74E359EED0DE44 /* FirebaseAccountRepository.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +57,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		30F97EDC91B465924DE62BA0 /* AuthenticationModule.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthenticationModule.swift; sourceTree = "<group>"; };
 		3411C1D4299C874600C7F270 /* Signup.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Signup.storyboard; sourceTree = "<group>"; };
 		3411C1D6299C876300C7F270 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		3417A6DB299A88F60051391F /* DateApps2023.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DateApps2023.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,7 +78,10 @@
 		3443DFB7299CB0B0006EACB0 /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		3443DFBA299CBA8D006EACB0 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		3443DFBC299CBA9E006EACB0 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
+		9B6649E7619C59554DB4BF26 /* AccountRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AccountRepository.swift; sourceTree = "<group>"; };
+		A382C5838719643FE71A12F0 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
 		C732A00BABD6CEE00C75B7BB /* User.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		DC06F7876B74E359EED0DE44 /* FirebaseAccountRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FirebaseAccountRepository.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +118,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1DC5876C7B5D457C18269250 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				DC06F7876B74E359EED0DE44 /* FirebaseAccountRepository.swift */,
+			);
+			name = Data;
+			path = Data;
+			sourceTree = "<group>";
+		};
 		3411C1D3299C872800C7F270 /* Signup */ = {
 			isa = PBXGroup;
 			children = (
@@ -154,6 +171,9 @@
 				3417A6EC299A88F70051391F /* Info.plist */,
 				3417A70E299A89AA0051391F /* GoogleService-Info.plist */,
 				6248703BA6F411BF75E6F0C3 /* Model */,
+				B90781D974114557B85B6983 /* Domain */,
+				1DC5876C7B5D457C18269250 /* Data */,
+				6EE34FEE5A24D242D151AC18 /* Presentation */,
 			);
 			path = DateApps2023;
 			sourceTree = "<group>";
@@ -200,6 +220,25 @@
 			);
 			name = Model;
 			path = Model;
+			sourceTree = "<group>";
+		};
+		6EE34FEE5A24D242D151AC18 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				30F97EDC91B465924DE62BA0 /* AuthenticationModule.swift */,
+				A382C5838719643FE71A12F0 /* AuthenticationViewModel.swift */,
+			);
+			name = Presentation;
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		B90781D974114557B85B6983 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				9B6649E7619C59554DB4BF26 /* AccountRepository.swift */,
+			);
+			name = Domain;
+			path = Domain;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -361,6 +400,10 @@
 				3411C1D7299C876300C7F270 /* SignupViewController.swift in Sources */,
 				3417A6E1299A88F60051391F /* SceneDelegate.swift in Sources */,
 				FACE5695E0D32F765C6D3BC8 /* User.swift in Sources */,
+				A3CBF74F751ED6931D310C27 /* AccountRepository.swift in Sources */,
+				FBB491DBCA9BB0494FC741C0 /* FirebaseAccountRepository.swift in Sources */,
+				1DDA49AB7D786FD59690A1C8 /* AuthenticationModule.swift in Sources */,
+				DB8CE339851291659D73BA1B /* AuthenticationViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

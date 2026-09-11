@@ -6,17 +6,16 @@
 //
 
 import UIKit
+
 /*
  # About Warning
  参考URL: https://zenn.dev/nekomimimi/scraps/c27eee05173a07
  */
 
-class ViewController: UIViewController {
+final class ViewController: UIViewController {
+    @IBOutlet private var signupButton: UIButton!
+    @IBOutlet private var loginButton: UIButton!
 
-    
-    @IBOutlet weak var signupButton: UIButton!
-    @IBOutlet weak var loginButton: UIButton!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -28,20 +27,19 @@ class ViewController: UIViewController {
         loginButton.layer.cornerRadius = 20
     }
 
-    @IBAction func tapSignupButton(_ sender: Any) {
-        let storyboard: UIStoryboard = UIStoryboard(name: "Signup", bundle: nil)
-        
+    @IBAction private func tapSignupButton(_: Any) {
+        let storyboard = UIStoryboard(name: "Signup", bundle: nil)
+
         if let signupVC = storyboard.instantiateViewController(withIdentifier: "signup") as? SignupViewController {
             navigationController?.pushViewController(signupVC, animated: true)
         }
     }
-    
-    @IBAction func tapLoginButton(_ sender: Any) {
-        let storyboard: UIStoryboard = UIStoryboard(name: "Login", bundle: nil)
-        
-        if let signupVC = storyboard.instantiateViewController(withIdentifier: "login") as? LoginViewController {
-            navigationController?.pushViewController(signupVC, animated: true)
+
+    @IBAction private func tapLoginButton(_: Any) {
+        let storyboard = UIStoryboard(name: "Login", bundle: nil)
+
+        if let loginViewController = storyboard.instantiateViewController(withIdentifier: "login") as? LoginViewController {
+            navigationController?.pushViewController(loginViewController, animated: true)
         }
     }
 }
-
