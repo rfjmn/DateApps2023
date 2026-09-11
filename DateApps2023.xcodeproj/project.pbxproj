@@ -32,6 +32,7 @@
 		3443DFB8299CB0B0006EACB0 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3443DFB7299CB0B0006EACB0 /* Home.storyboard */; };
 		3443DFBB299CBA8D006EACB0 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3443DFBA299CBA8D006EACB0 /* LoginViewController.swift */; };
 		3443DFBD299CBA9E006EACB0 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3443DFBC299CBA9E006EACB0 /* Login.storyboard */; };
+		FACE5695E0D32F765C6D3BC8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C732A00BABD6CEE00C75B7BB /* User.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +73,7 @@
 		3443DFB7299CB0B0006EACB0 /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		3443DFBA299CBA8D006EACB0 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		3443DFBC299CBA9E006EACB0 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
+		C732A00BABD6CEE00C75B7BB /* User.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +153,7 @@
 				3417A6E9299A88F70051391F /* LaunchScreen.storyboard */,
 				3417A6EC299A88F70051391F /* Info.plist */,
 				3417A70E299A89AA0051391F /* GoogleService-Info.plist */,
+				6248703BA6F411BF75E6F0C3 /* Model */,
 			);
 			path = DateApps2023;
 			sourceTree = "<group>";
@@ -188,6 +191,15 @@
 				3443DFBC299CBA9E006EACB0 /* Login.storyboard */,
 			);
 			path = Login;
+			sourceTree = "<group>";
+		};
+		6248703BA6F411BF75E6F0C3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C732A00BABD6CEE00C75B7BB /* User.swift */,
+			);
+			name = Model;
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -348,6 +360,7 @@
 				3417A6DF299A88F60051391F /* AppDelegate.swift in Sources */,
 				3411C1D7299C876300C7F270 /* SignupViewController.swift in Sources */,
 				3417A6E1299A88F60051391F /* SceneDelegate.swift in Sources */,
+				FACE5695E0D32F765C6D3BC8 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

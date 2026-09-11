@@ -1,0 +1,11 @@
+
+
+# Local build and developer settings
+.DS_Store
+**/.build/
+**/xcuserdata/
+*.xcuserstate
+DerivedData/
+.env
+.env.*
+!.env.example
