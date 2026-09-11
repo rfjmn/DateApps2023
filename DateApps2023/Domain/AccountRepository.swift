@@ -1,10 +1,12 @@
 import Foundation
 
+/// 認証サービスのユーザーIDと、保存するプロフィール名。
 struct Account: Equatable {
     let id: String
     let name: String
 }
 
+/// 認証とプロフィール作成をデータ層へ委譲する境界。呼び出しと結果通知はMainActor上で行います。
 @MainActor
 protocol AccountRepository {
     func signIn(email: String, password: String, completion: @escaping (Result<Void, Error>) -> Void)
@@ -24,6 +26,7 @@ enum AccountValidationError: LocalizedError, Equatable {
     }
 }
 
+/// 入力を検証・正規化してから、ログインまたは登録をRepositoryへ依頼するUseCase。
 @MainActor
 final class AuthenticateAccountUseCase {
     private let repository: AccountRepository
@@ -32,6 +35,9 @@ final class AuthenticateAccountUseCase {
         self.repository = repository
     }
 
+    /// メールアドレス前後の空白を除去し、入力条件を満たす場合にログインを依頼します。
+    ///
+    /// パスワードは変更しません。入力不正の場合はRepositoryを呼ばずに失敗を通知します。
     func signIn(email: String, password: String, completion: @escaping (Result<Void, Error>) -> Void) {
         let email = email.trimmingCharacters(in: .whitespacesAndNewlines)
         do {
@@ -42,6 +48,7 @@ final class AuthenticateAccountUseCase {
         }
     }
 
+    /// 名前・メールアドレス・パスワード・確認入力を検証し、名前とメールアドレスの前後の空白を除去して登録を依頼します。
     func signUp(name: String, email: String, password: String, confirmation: String,
                 completion: @escaping (Result<Void, Error>) -> Void)
     {

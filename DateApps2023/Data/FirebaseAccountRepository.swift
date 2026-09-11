@@ -2,6 +2,10 @@ import FirebaseAuth
 import FirebaseFirestore
 import Foundation
 
+/// Firebase AuthenticationとFirestoreへ接続するRepository。
+///
+/// 登録は認証アカウントの作成、プロフィールの保存の順に行います。
+/// プロフィール保存に失敗しても、作成済みの認証アカウントは削除しません。
 @MainActor
 final class FirebaseAccountRepository: AccountRepository {
     func signIn(email: String, password: String, completion: @escaping (Result<Void, Error>) -> Void) {

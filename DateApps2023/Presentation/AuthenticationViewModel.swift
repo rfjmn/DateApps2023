@@ -1,5 +1,6 @@
 import Foundation
 
+/// 認証フォームの送信状態と結果を管理するViewModel。送信中の重複操作は無視します。
 @MainActor
 final class AuthenticationViewModel {
     enum State: Equatable {
@@ -10,6 +11,7 @@ final class AuthenticationViewModel {
         didSet { onStateChange?(state) }
     }
 
+    /// 状態の変更後に呼ばれる通知先。画面を参照するクロージャでは弱参照を使用します。
     var onStateChange: ((State) -> Void)?
     private let useCase: AuthenticateAccountUseCase
 
